@@ -1,24 +1,24 @@
-\name{TPIS-package}
-\alias{TPIS-package}
-\alias{TPIS}
+\name{TIPS-package}
+\alias{TIPS-package}
+\alias{TIPS}
 \docType{package}
 \title{
-\packageTitle{TPIS}
+\packageTitle{TIPS}
 }
 \description{
-\packageDescription{TPIS}
+\packageDescription{TIPS}
 }
 \details{
 
 The DESCRIPTION file:
-\packageDESCRIPTION{TPIS}
-\packageIndices{TPIS}
+\packageDESCRIPTION{TIPS}
+\packageIndices{TIPS}
 ~~ An overview of how to use the package, including the most important functions ~~
 }
 \author{
-\packageAuthor{TPIS}
+\packageAuthor{TIPS}
 
-Maintainer: \packageMaintainer{TPIS}
+Maintainer: \packageMaintainer{TIPS}
 }
 \references{
 ~~ Literature or other references for background information ~~
