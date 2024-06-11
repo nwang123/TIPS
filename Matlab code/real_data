@@ -1,0 +1,147 @@
+% chunk 1
+n1 = 205; n2 = 16470  ; m1 = 440; p1  = 6769; 
+alpha_initial = normrnd(0, 0.01, [m1, 1]);
+old = [0.01,0.01,0.01, alpha_initial'];
+
+ k = [repmat(7, 1, 7), repmat(8, 1, 8), repmat(6, 1, 12), repmat(5, 1, 5), ...
+         repmat(6, 1, 6), repmat(5, 1, 5), repmat(9, 1, 9), repmat(6, 1, 6), ...
+         repmat(8, 1, 8), repmat(5, 1, 5), repmat(6, 1, 6), repmat(10, 1, 10), ...
+         repmat(12, 1, 12), repmat(7, 1, 7), repmat(6, 1, 6), repmat(7, 1, 7), ...
+         repmat(12, 1, 12), repmat(5, 1, 5),repmat(17, 1, 17),repmat(5, 1, 10),...
+         repmat(14, 1, 14), repmat(19, 1, 19), repmat(8, 1, 8), repmat(5, 1, 5),...
+         repmat(7, 1, 7), repmat(18, 1, 18), repmat(5, 1, 5), repmat(6, 1, 6),...
+         repmat(5, 1, 5), repmat(7, 1, 14), repmat(20, 1, 20), repmat(12, 1, 12),...
+         repmat(6, 1, 6), repmat(18, 1, 18), repmat(1, 1, 120)];
+
+%%% get initial values
+% Convert table to matrix
+Y_mat = readtable("y_gene_brain_chu1.csv");
+Y_mat = table2array(Y_mat);
+wg1_mat = readtable("w1_brain_chu1.csv");
+wg1_mat = table2array(wg1_mat);
+
+
+% Perform the matrix operations
+u = pinv(wg1_mat' * wg1_mat) * wg1_mat' * Y_mat;
+wg2_mat = readtable("w2_brain_chu1.csv");
+wg2_mat = table2array(wg2_mat);
+
+X = wg2_mat * u;
+newz_mat = load('z_brain.mat');
+newz_mat  = newz_mat.w1_brain;
+newz_mat = (newz_mat - mean(newz_mat)) ./ std(newz_mat);
+% Compute the OLS estimate for alpha
+alpha1 = pinv(X' * X) * X' * newz_mat; 
+
+% Estimating residuals
+e1 = Y_mat - wg1_mat * u;
+e2 = newz_mat - X * alpha1;
+
+% Estimating sigmas
+sigma1 = std(e1);
+sigma2 = std(e2);
+sigmau = std(u);
+old = [mean(sigma1), mean(sigma2), mean(sigmau), alpha1'];
+old(1)=0.01;
+
+
+
+a = 0.5;
+lam = 75; % Set lambda to 0
+tic
+% Call the EM_updated function once with lam = 0
+disp('Starting EM_updated function for lam = 75');
+results = EM_updated(old, a, wg1_mat, wg2_mat, newz_mat, Y_mat, lam, k, m1, n1, n2, p1);
+disp('Finished EM_updated function for lam = 75');
+toc
+
+% Save the results
+save('EM_75_05_chu1.mat', 'results');
+
+
+
+%%% comm
+% Loop through each element of y_gene_unique.Description
+Y_mat = readtable("y_brain_unique.csv");
+Y_mat = table2array(Y_mat);
+
+wg1_mat = readtable('w1_brain_unique.csv', 'ReadVariableNames', false);
+wg1_array = table2array(wg1_mat);
+% Initialize an array to store the indices of non-numeric columns
+non_numeric_columns = [];
+
+% Iterate through each column and check for non-numeric data
+for col = 1:size(wg1_array, 2)
+    if iscell(wg1_array(:, col)) && any(~cellfun(@isnumeric, wg1_array(:, col)))
+        non_numeric_columns = [non_numeric_columns, col]; % Store the index of the non-numeric column
+    end
+end
+% Convert non-numeric columns to numeric
+for col = non_numeric_columns
+    wg1_array(:, col) = num2cell(str2double(wg1_array(:, col)));
+end
+% Convert the cell array to a numeric matrix
+wg1_numeric = cell2mat(wg1_array);
+% Define the get_mode function
+get_mode = @(x) mode(x(~isnan(x)));
+
+% Replace NaN values with the mode of each column
+for col = 1:size(wg1_numeric, 2)
+    if any(isnan(wg1_numeric(:, col)))
+        mode_value = get_mode(wg1_numeric(:, col)); % Calculate mode excluding NaN values
+        wg1_numeric(isnan(wg1_numeric(:, col)), col) = mode_value; % Replace NaN with the mode
+    end
+end
+u = pinv(wg1_numeric' * wg1_numeric) * wg1_numeric' * Y_mat;
+wg2_mat = readtable("w2_brain_unique.csv");
+wg2_mat = table2array(wg2_mat);
+
+X = wg2_mat * u;
+newz_mat = load('z_brain.mat');
+newz_mat  = newz_mat.w1_brain;
+newz_mat = (newz_mat - mean(newz_mat)) ./ std(newz_mat);
+% Compute the OLS estimate for alpha
+alpha1 = pinv(X' * X) * X' * newz_mat; 
+
+% Estimating residuals
+e1 = Y_mat - wg1_numeric * u;
+e2 = newz_mat - X * alpha1;
+
+% Estimating sigmas
+sigma1 = std(e1);
+sigma2 = std(e2);
+sigmau = std(u);
+old = [mean(sigma1), mean(sigma2), mean(sigmau), alpha1'];
+old(1)=0.01;
+
+
+ n1 = 205; n2 =  16470; m1 = 919  ; p1  = 13901;  
+
+lengths = readtable("length_brain.csv");
+lengths = table2array(lengths);
+cum_lengths = cumsum(lengths);
+start_indices = zeros(length(cum_lengths), 1);
+end_indices = zeros(length(cum_lengths), 1);
+% Determine the start and end index for each gene
+for gene_number = 1:length(cum_lengths)
+    if gene_number == 1
+        start_indices(gene_number) = 1;
+    else
+        start_indices(gene_number) = cum_lengths(gene_number - 1) + 1;
+    end
+    end_indices(gene_number) = cum_lengths(gene_number);
+end
+
+mle_comm = zeros(m1, 6);
+for i = 1:m1
+    ynew = Y_mat(:,i);
+    ynew = (ynew - mean(ynew)) / std(ynew);
+    w1new = wg1_numeric(:,start_indices(i):end_indices(i)); w2new = wg2_mat(:,start_indices(i):end_indices(i));
+    znew = newz_mat;
+    % Assuming EM_comm is a function defined elsewhere in your MATLAB code
+    em1 = EM_comm([0.01, mean(sigma2), mean(sigmau), alpha1(i)], w1new, ynew, w2new, znew, n1, n2, 10, 0.001);
+    mle_comm(i, :) = em1;
+end
+save('mle_comm_brain.mat', 'mle_comm');
+
+

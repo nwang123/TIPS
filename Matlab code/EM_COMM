@@ -1,0 +1,19 @@
+function final_parameters = EM_comm(init, w1, y, w2, z, n1, n2, max_iter, tol)
+    theta_old = init - 0.0001;
+    prev_diff = Inf;
+    
+    for i = 1:max_iter
+        step_results = M_step_comm(theta_old, w1, y, w2, z, n1, n2);
+        theta_new = step_results(1:4);
+        like = step_results(5:6);
+
+        current_diff = mean(abs(theta_new - theta_old));
+        if abs(current_diff - prev_diff) < tol
+            break;
+        end
+        theta_old = theta_new;
+        prev_diff = current_diff;
+        fprintf('%f\n', prev_diff);
+    end
+    final_parameters = [theta_new, like] ;
+end
