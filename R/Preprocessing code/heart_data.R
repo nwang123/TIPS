@@ -684,3 +684,58 @@ write.table(geno2_heart_chunk3, "w2_heart_chu3.csv", sep = ",",row.names = FALSE
 write.table(geno2_heart_chunk4, "w2_heart_chu4.csv", sep = ",",row.names = FALSE, col.names = FALSE) 
 write.table(geno2_heart_chunk5, "w2_heart_chu5.csv", sep = ",",row.names = FALSE, col.names = FALSE) 
 write.table(geno2_heart_chunk6, "w2_heart_chu6.csv", sep = ",",row.names = FALSE, col.names = FALSE) 
+
+w2_ch1 <- read.csv("w2_heart_chu1.csv",header=FALSE)
+w2_ch1 <- apply(w2_ch1, 2, function(x) {
+  if(any(is.na(x))) {
+    mode_value <- get_mode(x)
+    x[is.na(x)] <- mode_value
+  }
+  return(x)
+})
+write.table(w2_ch1, "w2_heart_chu1.csv", sep = ",",row.names = FALSE, col.names = FALSE) 
+w2_ch2 <- read.csv("w2_heart_chu2.csv",header=FALSE)
+w2_ch2 <- apply(w2_ch2, 2, function(x) {
+  if(any(is.na(x))) {
+    mode_value <- get_mode(x)
+    x[is.na(x)] <- mode_value
+  }
+  return(x)
+})
+write.table(w2_ch2, "w2_heart_chu2.csv", sep = ",",row.names = FALSE, col.names = FALSE) 
+w2_ch3 <- read.csv("w2_heart_chu3.csv",header=FALSE)
+w2_ch3 <- apply(w2_ch3, 2, function(x) {
+  if(any(is.na(x))) {
+    mode_value <- get_mode(x)
+    x[is.na(x)] <- mode_value
+  }
+  return(x)
+})
+write.table(w2_ch3, "w2_heart_chu3.csv", sep = ",",row.names = FALSE, col.names = FALSE) 
+w2_ch4 <- read.csv("w2_heart_chu4.csv",header=FALSE)
+w2_ch4 <- apply(w2_ch4, 2, function(x) {
+  if(any(is.na(x))) {
+    mode_value <- get_mode(x)
+    x[is.na(x)] <- mode_value
+  }
+  return(x)
+})
+write.table(w2_ch4, "w2_heart_chu4.csv", sep = ",",row.names = FALSE, col.names = FALSE) 
+w2_ch5 <- read.csv("w2_heart_chu5.csv",header=FALSE)
+w2_ch5 <- apply(w2_ch5, 2, function(x) {
+  if(any(is.na(x))) {
+    mode_value <- get_mode(x)
+    x[is.na(x)] <- mode_value
+  }
+  return(x)
+})
+write.table(w2_ch5, "w2_heart_chu5.csv", sep = ",",row.names = FALSE, col.names = FALSE) 
+w2_ch6 <- read.csv("w2_heart_chu6.csv",header=FALSE)
+w2_ch6 <- apply(w2_ch6, 2, function(x) {
+  if(any(is.na(x))) {
+    mode_value <- get_mode(x)
+    x[is.na(x)] <- mode_value
+  }
+  return(x)
+})
+write.table(w2_ch6, "w2_heart_chu6.csv", sep = ",",row.names = FALSE, col.names = FALSE) 
