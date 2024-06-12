@@ -19,4 +19,4 @@ library(TIPS)
 
 Data
 ===========
-There are two data: heart data and brain data. Since the size of the GWAS dataset is too large, we split it to chunks in order to save computation time. Details in data file.
+There are two data: heart data and brain data. Since the size of the GWAS dataset is too large, we split it to chunks in order to save computation time. Details are in data file.
