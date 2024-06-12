@@ -1,7 +1,5 @@
 data_simu <- function(n1,n2,m1,p1,k,sigma1,sigma2,sigmau,truealpha,
                       size=c("small","large","hcsmall","htsmall")){
-library(foreach)
-library(doParallel)
   # Function to standardize a matrix by column
   standardize <- function(mat) {
     col_means <- colMeans(mat)
