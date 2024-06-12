@@ -27,4 +27,4 @@ data(y_gene_heart_chu1)
 data(w1_heart_chu1)
 data(z_heart)
 ```
-Since there are .zip file for w2_heart_chu1, the best way to import it is to download the .zip file and unzip it. Then you can import the data in r.
+Since there are .zip file for w2_heart_chu1, the best way to import it is to download the .zip file and unzip it. Then you can import the data in R.
