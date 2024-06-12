@@ -16,3 +16,7 @@ The following help page will also provide quick references for TIPS package and 
 ```
 library(TIPS)
 ```
+
+Data
+===========
+There are two data: heart data and brain data. Since the size of the GWAS dataset is too large, we split it to chunks in order to save computation time.
