@@ -1,3 +1,26 @@
+% This function implements the Expectation-Maximization (EM) algorithm for estimating parameters (sigma1, sigma2, sigmau, alpha) using an iterative procedure. 
+% It alternates between the Expectation (E-step) and Maximization (M-step) until convergence based on a specified tolerance level or maximum number of iterations.
+%
+% Inputs:
+% - old: Initial parameter estimates (sigma1, sigma2, sigmau, alpha).
+% - a_para: Regularization parameter controlling penalization in the M-step.
+% - wg1, wg2: Genotype matrices for two groups (n1 for group 1, n2 for group 2).
+% - z: Phenotypic data for group 2.
+% - y: Gene expression data for group 1.
+% - lambda: Regularization parameter for shrinkage.
+% - k: SNP loadings for each gene.
+% - m1: Number of genes.
+% - n1, n2: Number of samples in groups 1 and 2, respectively.
+% - p1: Number of SNPs.
+% - max_iter: Maximum number of iterations for convergence.
+% - tol: Tolerance level for checking convergence.
+%
+% Outputs:
+% - final_parameters: A vector containing the final estimates for (sigma1, sigma2, sigmau, alpha) after convergence, along with the final log-likelihood.
+%
+% The function iterates between the E-step and M-step, updating the parameter estimates at each iteration based on the results from the `mstep_updated` function. The loop continues until convergence is achieved, based on the difference between consecutive parameter estimates being smaller than the tolerance level (`tol`), or the maximum number of iterations (`max_iter`) is reached.
+%
+% The function also stores the parameter history across iterations to monitor progress, and uses parallel processing (via `parfor`) for efficiency during matrix operations.
 function [final_parameters] = EM_updated(old,  a_para, wg1, wg2, z, y, lambda, k, m1, n1, n2, p1, max_iter, tol) % [final_parameters, history]
     if nargin < 13
         max_iter = 10; % default value if not provided
