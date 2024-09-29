@@ -1,3 +1,26 @@
+% This function implements the M-step of the Expectation-Maximization (EM) algorithm for estimating parameters
+% in a genetic data model. It estimates the variance components (`sigma1`, `sigma2`, `sigmau`) and the effect sizes
+% (`alpha`) for each gene by solving a series of linear equations.
+%
+% Inputs:
+% - old: Initial estimates for the parameters (sigma1, sigma2, sigmau, alpha).
+% - a_para: A regularization parameter controlling the amount of penalization.
+% - wg1, wg2: Genotypic matrices for two groups (n1 for group 1, n2 for group 2).
+% - z: Phenotypic data for group 2.
+% - y: Gene expression data for group 1.
+% - lambda: Regularization parameter for Lasso or Ridge-type shrinkage.
+% - k: A vector representing the SNP loadings for each gene.
+% - m1: The number of genes.
+% - n1, n2: The number of samples in groups 1 and 2, respectively.
+% - p1: The number of SNPs.
+%
+% Outputs:
+% - A vector containing the estimated variance components (`sigma1`, `sigma2`, `sigmau`), the estimated effect sizes (`alphaest`), log-likelihood, and other auxiliary variables (e.g., E2).
+%
+% The function processes each gene's SNP block, computes the necessary matrix operations, and updates the parameter estimates using the M-step of the EM algorithm. The results are used to estimate residuals and log-likelihood for convergence checking in subsequent EM iterations.
+%
+% The function leverages parallel processing (via `parfor`) for efficiency, allowing for the concurrent computation of gene-specific parameters.
+
 function [output] = mstep_updated(old, a_para, wg1, wg2, z, y, lambda, k, m1, n1, n2, p1)
 % Initialize parameters
 sigma2 = old(2);
