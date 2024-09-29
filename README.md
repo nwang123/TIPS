@@ -33,6 +33,6 @@ data(z_heart)
 ```
 Since there are .zip file for w2_heart_chu1, the best way to import it is to download the .zip file and unzip it. Then you can import the data in R.
 
-Decelopment
+Development
 ===========
 This R package is developed by Neng Wang.
