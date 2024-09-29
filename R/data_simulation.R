@@ -1,5 +1,61 @@
+# Gene Expression Data Simulation Function (`data_simu`)
+
+# This repository contains an example of simulating gene expression data with customizable biological parameters using R. The function `data_simu` generates data for two groups (e.g., cases and controls) with varying sample sizes, SNP (Single Nucleotide Polymorphism) structures, and true effect sizes for the simulated genes. It is designed for applications in genetic studies such as Transcriptome-Wide Association Studies (TWAS).
+
+## Simulation Overview
+
+# The `data_simu` function creates a realistic simulation of genetic and gene expression data with multiple configurable options for study design, inheritance models, and genetic effects.
+
+### Key Function Parameters:
+# **n1**: Number of samples in the first group (e.g., 300 cases).
+# **n2**: Number of samples in the second group (e.g., 600 controls).
+# **m1**: Number of genes being simulated (e.g., 180 genes).
+# **p1**: Total number of SNPs across all genes (e.g., 900 SNPs, with 5 SNPs per gene).
+# **k**: SNP loadings, where certain genes have higher-impact SNPs (`sqrt(25)`), while others have smaller effects.
+# **sigma1**, **sigma2**, **sigmau**: Variance components for gene expression noise, phenotype noise, and random effects, respectively.
+# **truealpha**: A vector representing the true effect sizes of the SNPs on the phenotype.
+# **size**: Data size category, which can be `"small"`, `"large"`, `"hcsmall"` (high complexity small), or `"htsmall"` (heterogeneous small).
+# **wg_str**: Inheritance structure model, with options for `"additive"`, `"heterogeneous"`, `"recessive"`, or `"compensatory"`.
+
+## Function Details
+
+### 1. **Generating Genotype Matrix**
+# The function creates SNP data (`wg1` and `wg2`) for two groups. The genotype is generated under different inheritance models:
+
+- **Additive**: SNPs are modeled additively, assuming a linear combination of alleles.
+- **Heterogeneous**: SNPs are binary but reduced when an allele appears more than once.
+- **Recessive**: SNPs with a recessive model, where heterozygous variants are assigned a value of 0.
+- **Compensatory**: A compensatory model where having two mutated alleles cancels out the genetic effect.
+
+### 2. **Data Normalization**
+After generating the genotype matrices (`wg1` and `wg2`), the function normalizes the data, transforming it to fit within the range [0, 1].
+
+### 3. **Simulating Gene Expression (`y`) and Phenotype (`z`)**
+The gene expression matrix `y` for group 1 and the phenotype vector `z` for group 2 are simulated using the genotype matrix and the specified true effect sizes (`truealpha`).
+
+### 4. **Maximum Likelihood Estimation (MLE) and Expectation-Maximization (EM)**
+The function uses the **M-step** and **EM algorithm** to iteratively estimate model parameters, including SNP effect sizes (`alpha`) and noise variances (`sigma1`, `sigma2`, `sigmau`).
+
+- **M-step**: Optimizes the parameters for gene expression (`y`) and phenotype (`z`) given the current estimates of the SNP effects and noise levels.
+- **EM algorithm**: Iteratively updates the parameter estimates using the M-step until convergence.
+
+### 5. **Model Estimation and Cross-validation**
+The function supports k-fold cross-validation to tune regularization parameters (`lambda`) for different models, such as Lasso and Elastic Net. It calculates the mean squared error (MSE) to evaluate model performance.
+
+### 6. **Supported Models**
+The function simulates several models commonly used in genetics research:
+- **Lasso**: Performs L1 regularization, useful for feature selection.
+- **Elastic Net (EN)**: Combines L1 and L2 regularization for improved prediction accuracy.
+- **Multivariate TWAS**: Models multiple gene expression effects on the phenotype.
+- **CoMM**: A correlation minimization model to improve phenotype prediction.
+
+### 7. **P-values and Likelihood Ratio Tests**
+For each gene, likelihood ratio tests are conducted to assess the significance of SNP effects. The function returns p-values for the association between gene expression and the phenotype using different methods such as Lasso, Elastic Net, and TWAS.
+
+
 data_simu <- function(n1,n2,m1,p1,k,sigma1,sigma2,sigmau,truealpha,
-                      size=c("small","large","hcsmall","htsmall")){
+                      size=c("small","large","hcsmall","htsmall"),
+                      wg_str = c("additive","heterogeneous","recessive","compensatory")){
   # Function to standardize a matrix by column
   standardize <- function(mat) {
     col_means <- colMeans(mat)
@@ -14,10 +70,26 @@ data_simu <- function(n1,n2,m1,p1,k,sigma1,sigma2,sigmau,truealpha,
     allele <- colSums(rbind(sequ1,sequ2))
     return(allele)
   }
-  
-  wg1 <- foreach(i=1:p1, .combine=cbind, .packages="foreach") %do% generatewg(n1)
-  wg2 <- foreach(i=1:p1, .combine=cbind, .packages="foreach") %do% generatewg(n2)
-  
+  if (wg_str == "additive"){
+    wg1 <- foreach(i=1:p1, .combine=cbind, .packages="foreach") %do% generatewg(n1)
+    wg2 <- foreach(i=1:p1, .combine=cbind, .packages="foreach") %do% generatewg(n2)
+  }else if (wg_str == "heterogeneous"){
+    wg1 <- foreach(i=1:p1, .combine=cbind, .packages="foreach") %do% generatewg(n1)
+    wg2 <- foreach(i=1:p1, .combine=cbind, .packages="foreach") %do% generatewg(n2)
+    wg1[wg1 == 2] <- 1
+    wg2[wg2 == 2] <- 1
+  }else if (wg_str == "recessive"){
+    wg1 <- foreach(i=1:p1, .combine=cbind, .packages="foreach") %do% generatewg(n1)
+    wg2 <- foreach(i=1:p1, .combine=cbind, .packages="foreach") %do% generatewg(n2)
+    wg1[wg1 == 1] <- 0
+    wg2[wg2 == 1] <- 0
+  }else if (wg_str == "compensatory"){
+    wg1 <- foreach(i=1:p1, .combine=cbind, .packages="foreach") %do% generatewg(n1)
+    wg2 <- foreach(i=1:p1, .combine=cbind, .packages="foreach") %do% generatewg(n2)
+    wg1[wg1 == 2] <- 0
+    wg2[wg2 == 2] <- 0
+  }
+
   normalize_matrix <- function(mat) {
     min_vals <- apply(mat, 2, min) # Find the minimum value of each column
     max_vals <- apply(mat, 2, max) # Find the maximum value of each column
@@ -29,7 +101,9 @@ data_simu <- function(n1,n2,m1,p1,k,sigma1,sigma2,sigmau,truealpha,
   # Standardize wg1 and wg2
   #wg1 <- standardize(wg1)
   #wg2 <- standardize(wg2)
-  if (size=="hcsmall"){
+  if (size == "small"){
+    sigman=0.05
+  }else if (size=="hcsmall"){
     sigman=0.005
   }else if (size=="htsmall"){
     sigman=0.005
@@ -42,9 +116,7 @@ data_simu <- function(n1,n2,m1,p1,k,sigma1,sigma2,sigmau,truealpha,
     block_start <- (i - 1) * 5 + 1
     u[block_start:(block_start + 4), i] <- rnorm(5, 0, sqrt(sigmau))
   }
-  
-  
-  
+
   e1 <- matrix(rnorm(n1 * m1, 0, sqrt(sigma1)), n1, m1)
   
   e2 <- rnorm(n2,0,sqrt(sigma2))
