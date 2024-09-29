@@ -22,35 +22,35 @@
 ### 1. **Generating Genotype Matrix**
 # The function creates SNP data (`wg1` and `wg2`) for two groups. The genotype is generated under different inheritance models:
 
-- **Additive**: SNPs are modeled additively, assuming a linear combination of alleles.
-- **Heterogeneous**: SNPs are binary but reduced when an allele appears more than once.
-- **Recessive**: SNPs with a recessive model, where heterozygous variants are assigned a value of 0.
-- **Compensatory**: A compensatory model where having two mutated alleles cancels out the genetic effect.
+# **Additive**: SNPs are modeled additively, assuming a linear combination of alleles.
+# **Heterogeneous**: SNPs are binary but reduced when an allele appears more than once.
+# **Recessive**: SNPs with a recessive model, where heterozygous variants are assigned a value of 0.
+# **Compensatory**: A compensatory model where having two mutated alleles cancels out the genetic effect.
 
 ### 2. **Data Normalization**
-After generating the genotype matrices (`wg1` and `wg2`), the function normalizes the data, transforming it to fit within the range [0, 1].
+# After generating the genotype matrices (`wg1` and `wg2`), the function normalizes the data, transforming it to fit within the range [0, 1].
 
 ### 3. **Simulating Gene Expression (`y`) and Phenotype (`z`)**
-The gene expression matrix `y` for group 1 and the phenotype vector `z` for group 2 are simulated using the genotype matrix and the specified true effect sizes (`truealpha`).
+# The gene expression matrix `y` for group 1 and the phenotype vector `z` for group 2 are simulated using the genotype matrix and the specified true effect sizes (`truealpha`).
 
 ### 4. **Maximum Likelihood Estimation (MLE) and Expectation-Maximization (EM)**
-The function uses the **M-step** and **EM algorithm** to iteratively estimate model parameters, including SNP effect sizes (`alpha`) and noise variances (`sigma1`, `sigma2`, `sigmau`).
+# The function uses the **M-step** and **EM algorithm** to iteratively estimate model parameters, including SNP effect sizes (`alpha`) and noise variances (`sigma1`, `sigma2`, `sigmau`).
 
-- **M-step**: Optimizes the parameters for gene expression (`y`) and phenotype (`z`) given the current estimates of the SNP effects and noise levels.
-- **EM algorithm**: Iteratively updates the parameter estimates using the M-step until convergence.
+# **M-step**: Optimizes the parameters for gene expression (`y`) and phenotype (`z`) given the current estimates of the SNP effects and noise levels.
+# **EM algorithm**: Iteratively updates the parameter estimates using the M-step until convergence.
 
 ### 5. **Model Estimation and Cross-validation**
-The function supports k-fold cross-validation to tune regularization parameters (`lambda`) for different models, such as Lasso and Elastic Net. It calculates the mean squared error (MSE) to evaluate model performance.
+# The function supports k-fold cross-validation to tune regularization parameters (`lambda`) for different models, such as Lasso and Elastic Net. It calculates the mean squared error (MSE) to evaluate model performance.
 
 ### 6. **Supported Models**
-The function simulates several models commonly used in genetics research:
-- **Lasso**: Performs L1 regularization, useful for feature selection.
-- **Elastic Net (EN)**: Combines L1 and L2 regularization for improved prediction accuracy.
-- **Multivariate TWAS**: Models multiple gene expression effects on the phenotype.
-- **CoMM**: A correlation minimization model to improve phenotype prediction.
+# The function simulates several models commonly used in genetics research:
+# **Lasso**: Performs L1 regularization, useful for feature selection.
+# **Elastic Net (EN)**: Combines L1 and L2 regularization for improved prediction accuracy.
+# **Multivariate TWAS**: Models multiple gene expression effects on the phenotype.
+# **CoMM**: A correlation minimization model to improve phenotype prediction.
 
 ### 7. **P-values and Likelihood Ratio Tests**
-For each gene, likelihood ratio tests are conducted to assess the significance of SNP effects. The function returns p-values for the association between gene expression and the phenotype using different methods such as Lasso, Elastic Net, and TWAS.
+# For each gene, likelihood ratio tests are conducted to assess the significance of SNP effects. The function returns p-values for the association between gene expression and the phenotype using different methods such as Lasso, Elastic Net, and TWAS.
 
 
 data_simu <- function(n1,n2,m1,p1,k,sigma1,sigma2,sigmau,truealpha,
