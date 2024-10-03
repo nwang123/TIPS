@@ -1,22 +1,3 @@
-# Gene Expression Data Simulation Function (`data_simu`)
-
-# This repository contains an example of simulating gene expression data with customizable biological parameters using R. The function `data_simu` generates data for two groups (e.g., cases and controls) with varying sample sizes, SNP (Single Nucleotide Polymorphism) structures, and true effect sizes for the simulated genes. It is designed for applications in genetic studies such as Transcriptome-Wide Association Studies (TWAS).
-
-## Simulation Overview
-
-# The `data_simu` function creates a realistic simulation of genetic and gene expression data with multiple configurable options for study design, inheritance models, and genetic effects.
-
-### Key Function Parameters:
-# **n1**: Number of samples in the first group (e.g., 300 cases).
-# **n2**: Number of samples in the second group (e.g., 600 controls).
-# **m1**: Number of genes being simulated (e.g., 180 genes).
-# **p1**: Total number of SNPs across all genes (e.g., 900 SNPs, with 5 SNPs per gene).
-# **k**: SNP loadings, where certain genes have higher-impact SNPs (`sqrt(25)`), while others have smaller effects.
-# **sigma1**, **sigma2**, **sigmau**: Variance components for gene expression noise, phenotype noise, and random effects, respectively.
-# **truealpha**: A vector representing the true effect sizes of the SNPs on the phenotype.
-# **size**: Data size category, which can be `"small"`, `"large"`, `"hcsmall"` (high complexity small), or `"htsmall"` (heterogeneous small).
-# **wg_str**: Inheritance structure model, with options for `"additive"`, `"heterogeneous"`, `"recessive"`, or `"compensatory"`.
-
 ## Function Details
 
 ### 1. **Generating Genotype Matrix**
@@ -51,6 +32,7 @@
 
 ### 7. **P-values and Likelihood Ratio Tests**
 # For each gene, likelihood ratio tests are conducted to assess the significance of SNP effects. The function returns p-values for the association between gene expression and the phenotype using different methods such as Lasso, Elastic Net, and TWAS.
+
 
 
 data_simu <- function(n1,n2,m1,p1,k,sigma1,sigma2,sigmau,truealpha,
