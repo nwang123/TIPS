@@ -1,4 +1,4 @@
-\name{TIPS}
+\name{tips}
 \alias{TIPS}
 \title{Implementation of the TIPS Algorithm for Gene Expression Analysis}
 \description{
@@ -23,7 +23,7 @@ This function first extracts the genotype (wg1, wg2), gene expression (y), and p
   \item{mse_l2}{MSE for the l2 penalty model.}
 }
 \examples{
-simulated_data <- simulate_data(300, 600, 180, 900, rep(1, 180), 0.1, 0.2, 0.05, runif(180, 0.5, 1.5))
+simulated_data <- simulate_data(300, 600, 180, 900, rep(1, 180), 0.1, 0.2, 0.05, runif(180, 0.5, 1.5),size = "small",wg_str ="additive")
 result <- tips(simulated_data)
 }
 \seealso{
