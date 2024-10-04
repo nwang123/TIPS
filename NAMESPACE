@@ -1,1 +1,1 @@
-export("data_simu")
+export("simulate_data")
