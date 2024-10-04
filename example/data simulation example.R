@@ -14,16 +14,24 @@ This simulation generates gene expression or SNP data for reference panel (`n1 =
 - **truealpha**: A vector representing the true effect sizes of the SNPs.
 
 
-n1 = 300
-n2 = 600
-m1 = 180
-p1 = 5 * m1
-k = c(rep(sqrt(25), 25 * 5), rep(1, 55))
+# Set simulation parameters
+n1 <- 100  # Sample size for gene expression data
+n2 <- 200  # Sample size for phenotype data
+m1 <- 50   # Number of genes
+p1 <-  5 * m1  # Number of SNPs
+k = c(rep(sqrt(25), 25 * 5), rep(1, 55))    # Parameter for penalization (adjust as needed)
 sigma1 = 0.2
 sigma2 = 0.2
 sigmau = 0.02
-truealpha <- c(rep(0, 25), rep(0.2, 25), rep(0.02, 25), c(rep(0, 10), rep(0.2, 10), rep(0, 5)),
-               c(rep(0, 10), rep(0.02, 5), rep(0, 10)), 
-               c(rep(0.2, 10), rep(0.02, 10),  rep(0.2, 5), rep(0.02, 0), rep(0, 30)))
+truealpha <- rep(1, m1)  # True alpha values (adjust as needed)
+size <- "small"
+wg_str <- "additive"
 
-simu1_1 <- data_simu(n1, n2, m1, p1, k, sigma1, sigma2, sigmau, truealpha, size = "small", wg_str = "additive")
+# Simulate data
+sim_data <- simulate_data(n1, n2, m1, p1, k, sigma1, sigma2, sigmau, truealpha, size, wg_str)
+
+# Analyze data
+analysis_results <- analyze_data(sim_data)
+
+# View results
+print(analysis_results)
