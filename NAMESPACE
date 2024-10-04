@@ -1,2 +1,2 @@
 export("simulate_data")
-export(tips)
+export("tips")
