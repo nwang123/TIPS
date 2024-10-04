@@ -31,7 +31,7 @@ wg_str <- "additive"
 sim_data <- simulate_data(n1, n2, m1, p1, k, sigma1, sigma2, sigmau, truealpha, size, wg_str)
 
 # Analyze data
-analysis_results <- analyze_data(sim_data)
+analysis_results <- TIPS(sim_data)
 
 # View results
 print(analysis_results)
