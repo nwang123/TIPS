@@ -2,10 +2,10 @@
 \alias{TIPS}
 \title{Implementation of the TIPS Algorithm for Gene Expression Analysis}
 \description{
-The \code{TIPS} function applies the TIPS (Two-stage Integrative Polygenic Score) algorithm to estimate genetic effects using simulated or real gene expression and SNP data. This function handles different inheritance models and performs multi-lambda EM algorithm computations.
+The \code{tips} function applies the TIPS (Two-stage Integrative Polygenic Score) algorithm to estimate genetic effects using simulated or real gene expression and SNP data. This function handles different inheritance models and performs multi-lambda EM algorithm computations.
 }
 \usage{
-TIPS(simulated_data)
+tips(simulated_data)
 }
 \arguments{
   \item{simulated_data}{A list containing simulated genotype, gene expression, and phenotype data. The data must be generated using the \code{\link{simulate_data}} function.}
@@ -24,7 +24,7 @@ This function first extracts the genotype (wg1, wg2), gene expression (y), and p
 }
 \examples{
 simulated_data <- simulate_data(300, 600, 180, 900, rep(1, 180), 0.1, 0.2, 0.05, runif(180, 0.5, 1.5))
-result <- TIPS(simulated_data)
+result <- tips(simulated_data)
 }
 \seealso{
   \code{\link{simulate_data}} for generating the data.
