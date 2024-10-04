@@ -23,7 +23,7 @@
 ### 5. **Model Estimation and Cross-validation**
 # The function supports k-fold cross-validation to tune regularization parameters (`lambda`) for different models, such as Lasso and Elastic Net. It calculates the mean squared error (MSE) to evaluate model performance.
 
-TIPS <- function(simulated_data) {
+tips <- function(simulated_data) {
   
   # Extract variables from the simulated data
   wg1 <- simulated_data$wg1
