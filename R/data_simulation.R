@@ -288,7 +288,6 @@ TIPS <- function(simulated_data) {
     mle_l2 = mle_l2,
     mse_l0 = mse_l0,
     mse_l1 = mse_l1,
-    mse_l2 = mse_l2,
-  )
+    mse_l2 = mse_l2)
   return(result_list)
 }
