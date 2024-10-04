@@ -93,63 +93,56 @@ y_gene_heart_chu1_genename <- read_csv("y_gene_heart_chu1_genename.csv")
 # Load the pre-saved estimates for TWAS alpha values
 load("alphaest_twas1.RData")
 
-# Define key parameters
-m1_ch1 = 507    # Number of genes
-n1 = 386        # Number of samples in the first group
-n2 = 16470      # Number of samples in the second group
-p1 = 3395       # Number of SNPs (genetic markers)
 
-# Extract the estimated alpha values (effect sizes) from the loaded data
-alphaest_ch1 <- alphaest_twas1[4:(m1_ch1 + 3)]
-
-# Extract the estimated E2 values (model fit residuals) from the loaded data
-E2_ch1 <- alphaest_twas1[(m1_ch1 + 5):(m1_ch1 + m1_ch1 + 4)]
-
-# Calculate the mean of the sigma2 estimates
-sigma2est = mean(alphaest_twas1[2])
-
-# Define the SNP loadings for each pathway. This vector indicates how many SNPs contribute to each pathway.
-k = c(9, 6, 7, 13, 9, 18, 16, 7, 5, 12, 11, 8, 5, 7, 8, 16, 16, 16, 9, 7, 5, 6, 9, 24, 5, 22, 6, 7, 8, 11, 
-      5, 5, 11, 5, 13, 10, 9, 16, 6, 19, 6, 8, 31, 9, 9, 5, 6, 5, 16, 5)
-
-# Compute the cumulative sum to identify the SNP block ranges for each pathway
-cumulative_sums <- cumsum(k)
-
-# Create starting and ending indices for each pathway block
-starts <- c(1, head(cumulative_sums, -1) + 1)
-ends <- cumulative_sums
-
-# Create a list of SNP indices for each pathway
-group_indices <- mapply(seq, from = starts, to = ends, SIMPLIFY = FALSE)
-
-# Initialize a vector to store p-values for each pathway
-p_values_lrt1 = rep(0, length(group_indices))
-
-# Loop over each pathway to calculate p-values using the likelihood ratio test
-for (i in 1:length(group_indices)) {
-  index = group_indices[[i]]  # SNP indices for the current pathway
+calculate_pathway_pvalues <- function(alphaest_twas1, m1_ch1, n1, n2, p1, k, pathway_names) {
   
-  # Initialize null hypothesis E2 values (with all pathways as null)
-  E2_null = E2_ch1
+  # Extract the estimated alpha and E2 values from the input result data
+  alphaest_ch1 <- alphaest_twas1[4:(m1_ch1 + 3)]
+  E2_ch1 <- alphaest_twas1[(m1_ch1 + 5):(m1_ch1 + m1_ch1 + 4)]
   
-  # Set the E2 values of the current pathway to the null value (mean sigma2 estimate)
-  E2_null[index] = alphaest_twas1[2 * m1_ch1 + 5]
+  # Calculate the mean of sigma2 estimates
+  sigma2est = mean(alphaest_twas1[2])
   
-  # Calculate the log-likelihood for the null model (no effect in the pathway)
-  log_likelihood_z = -0.5 * n2 * log(2 * pi * sigma2est) - 0.5 * sum(E2_null) / (length(index) * sigma2est)
+  # Compute the cumulative sum to identify the SNP block ranges for each pathway
+  cumulative_sums <- cumsum(k)
   
-  # Calculate the log-likelihood for the alternative model (effect in the pathway)
-  log_alter = -0.5 * n2 * log(2 * pi * sigma2est) - 0.5 * sum(E2_ch1) / (length(index) * sigma2est)
+  # Create starting and ending indices for each pathway block
+  starts <- c(1, head(cumulative_sums, -1) + 1)
+  ends <- cumulative_sums
   
-  # Calculate the likelihood ratio statistic and p-value for the current pathway
-  lr_statistic = 2 * (log_alter - log_likelihood_z)
-  p_values_lrt1[i] = pchisq(lr_statistic, df = length(index) - 1, lower.tail = FALSE)
+  # Create a list of SNP indices for each pathway
+  group_indices <- mapply(seq, from = starts, to = ends, SIMPLIFY = FALSE)
+  
+  # Initialize a vector to store p-values for each pathway
+  p_values_lrt1 = rep(0, length(group_indices))
+  
+  # Loop over each pathway to calculate p-values using the likelihood ratio test
+  for (i in 1:length(group_indices)) {
+    index = group_indices[[i]]  # SNP indices for the current pathway
+    
+    # Initialize null hypothesis E2 values
+    E2_null = E2_ch1
+    
+    # Set the E2 values of the current pathway to the null value
+    E2_null[index] = alphaest_twas1[2 * m1_ch1 + 5]
+    
+    # Calculate the log-likelihood for the null and alternative models
+    log_likelihood_z = -0.5 * n2 * log(2 * pi * sigma2est) - 0.5 * sum(E2_null) / (length(index) * sigma2est)
+    log_alter = -0.5 * n2 * log(2 * pi * sigma2est) - 0.5 * sum(E2_ch1) / (length(index) * sigma2est)
+    
+    # Calculate the likelihood ratio statistic and p-value for the current pathway
+    lr_statistic = 2 * (log_alter - log_likelihood_z)
+    p_values_lrt1[i] = pchisq(lr_statistic, df = length(index) - 1, lower.tail = FALSE)
+  }
+  
+  # Combine the pathway names and corresponding p-values into a data frame
+  result_df <- data.frame(
+    Pathway = pathway_names,
+    P_Value = p_values_lrt1
+  )
+  
+  return(result_df)
 }
-
-# Initialize a matrix to store the results (pathway names and p-values)
-result1 = matrix(NA, 50, 2)
-
-# Define the names of the pathways being tested
 pathway_names <- c(
   "Reactome Signaling by PDGF",                                                  
   "Reactome Potassium Channels",                                                 
@@ -202,10 +195,8 @@ pathway_names <- c(
   "Reactome Fatty acid, triacylglycerol, and ketone body metabolism",             
   "KEGG Hematopoietic cell lineage"
 )
-
-# Store pathway names and corresponding p-values in the result matrix
-result1[,1] <- pathway_names 
-result1[,2] <- p_values_lrt1
-
-
+k <- c(9, 6, 7, 13, 9, 18, 16, 7, 5, 12, 11, 8, 5, 7, 8, 16, 16, 16, 9, 7, 5, 6, 9, 24, 5, 22, 6, 7, 8, 11, 5, 5, 11, 5, 13, 10, 9, 16, 6, 19, 6, 8, 31, 9, 9, 5, 6, 5, 16, 5)
+# Example usage
+result <- calculate_pathway_pvalues(alphaest_twas1, 507, 386, 16470, 3395, 
+                                    k,pathway_names)
 
