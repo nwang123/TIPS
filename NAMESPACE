@@ -1,1 +1,2 @@
 export("simulate_data")
+export("tips")
