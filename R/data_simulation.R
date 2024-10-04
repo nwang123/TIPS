@@ -23,17 +23,6 @@
 ### 5. **Model Estimation and Cross-validation**
 # The function supports k-fold cross-validation to tune regularization parameters (`lambda`) for different models, such as Lasso and Elastic Net. It calculates the mean squared error (MSE) to evaluate model performance.
 
-### 6. **Supported Models**
-# The function simulates several models commonly used in genetics research:
-# **Lasso**: Performs L1 regularization, useful for feature selection.
-# **Elastic Net (EN)**: Combines L1 and L2 regularization for improved prediction accuracy.
-# **Multivariate TWAS**: Models multiple gene expression effects on the phenotype.
-# **CoMM**: A correlation minimization model to improve phenotype prediction.
-
-### 7. **P-values and Likelihood Ratio Tests**
-# For each gene, likelihood ratio tests are conducted to assess the significance of SNP effects. The function returns p-values for the association between gene expression and the phenotype using different methods such as Lasso, Elastic Net, and TWAS.
-
-
 
 data_simu <- function(n1,n2,m1,p1,k,sigma1,sigma2,sigmau,truealpha,
                       size=c("small","large","hcsmall","htsmall"),
