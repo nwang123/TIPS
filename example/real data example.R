@@ -197,6 +197,7 @@ pathway_names <- c(
   "Reactome Fatty acid, triacylglycerol, and ketone body metabolism",             
   "KEGG Hematopoietic cell lineage"
 )
+# Define the length of genes for each pathway group
 k <- c(9, 6, 7, 13, 9, 18, 16, 7, 5, 12, 11, 8, 5, 7, 8, 16, 16, 16, 9, 7, 5, 6, 9, 24, 5, 22, 6, 7, 8, 11, 5, 5, 11, 5, 13, 10, 9, 16, 6, 19, 6, 8, 31, 9, 9, 5, 6, 5, 16, 5)
 # Example usage
 result <- calculate_pathway_pvalues(alphaest_twas1, 507, 386, 16470, 3395, 
