@@ -1,5 +1,5 @@
 \name{tips}
-\alias{TIPS}
+\alias{tips}
 \title{Implementation of the TIPS Algorithm for Gene Expression Analysis}
 \description{
 The \code{tips} function applies the TIPS (Two-stage Integrative Polygenic Score) algorithm to estimate genetic effects using simulated or real gene expression and SNP data. This function handles different inheritance models and performs multi-lambda EM algorithm computations.
