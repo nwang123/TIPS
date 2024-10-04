@@ -143,6 +143,8 @@ calculate_pathway_pvalues <- function(alphaest_twas1, m1_ch1, n1, n2, p1, k, pat
   
   return(result_df)
 }
+
+# Define the pathway grouping information
 pathway_names <- c(
   "Reactome Signaling by PDGF",                                                  
   "Reactome Potassium Channels",                                                 
