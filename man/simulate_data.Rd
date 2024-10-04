@@ -42,7 +42,7 @@ sigma1 <- 0.1
 sigma2 <- 0.2
 sigmau <- 0.05
 truealpha <- runif(m1, 0.5, 1.5)
-sim_data <- simulate_data(n1, n2, m1, p1, k, sigma1, sigma2, sigmau, truealpha)
+sim_data <- simulate_data(n1, n2, m1, p1, k, sigma1, sigma2, sigmau, truealpha,size = "small",wg_str ="additive")
 }
 \seealso{
   \code{\link{TIPS}} for further analysis on the simulated data.
