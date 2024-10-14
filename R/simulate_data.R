@@ -35,7 +35,6 @@
 # The function returns a list containing the following elements:
 
 # - `wg1`, `wg2`: Simulated genotype matrices.
-# - `u`: Matrix of SNP effects.
 # - `y`: Simulated gene expression data.
 # - `z`: Simulated phenotype data.
 # - Other relevant parameters (`n1`, `n2`, `m1`, `p1`, etc.).
@@ -114,22 +113,8 @@ simulate_data <- function(n1, n2, m1, p1, k, sigma1, sigma2, sigmau, truealpha,
   simulated_data <- list(
     wg1 = wg1,
     wg2 = wg2,
-    u = u,
-    e1 = e1,
-    e2 = e2,
     y = y,
     z = z,
-    n1 = n1,
-    n2 = n2,
-    m1 = m1,
-    p1 = p1,
-    k = k,
-    sigma1 = sigma1,
-    sigma2 = sigma2,
-    sigmau = sigmau,
-    truealpha = truealpha,
-    size = size,
-    wg_str = wg_str
   )
   
   return(simulated_data)
