@@ -40,7 +40,7 @@
 # - Other relevant parameters (`n1`, `n2`, `m1`, `p1`, etc.).
 
 
-simulate_data <- function(n1, n2, m1, p1, k, sigma1, sigma2, sigmau, truealpha,
+simulate_data <- function(n1, n2, m1, p1, sigma1, sigma2, sigmau, truealpha,
                           size = c("small", "large", "hcsmall", "htsmall"),
                           wg_str = c("additive", "heterogeneous", "recessive", "compensatory")) {
   
@@ -94,11 +94,11 @@ simulate_data <- function(n1, n2, m1, p1, k, sigma1, sigma2, sigmau, truealpha,
     sigman <- 0.05
   }
   
-  # Initialize the matrix u
-  u <- matrix(rnorm(p1 * m1, 0, sqrt(sigman)), p1, m1)
+  # Initialize the matrix u_init
+  u_init <- matrix(rnorm(p1 * m1, 0, sqrt(sigman)), p1, m1)
   for (i in 1:m1) {
     block_start <- (i - 1) * 5 + 1
-    u[block_start:(block_start + 4), i] <- rnorm(5, 0, sqrt(sigmau))
+    u_init[block_start:(block_start + 4), i] <- rnorm(5, 0, sqrt(sigmau))
   }
   
   # Generate error terms
@@ -106,16 +106,16 @@ simulate_data <- function(n1, n2, m1, p1, k, sigma1, sigma2, sigmau, truealpha,
   e2 <- rnorm(n2, 0, sqrt(sigma2))
   
   # Generate response variables
-  y <- wg1 %*% u + e1  # Gene expressions
-  z <- wg2 %*% u %*% truealpha + e2  # Phenotype
+  y <- wg1 %*% u_init + e1  # Gene expressions
+  z <- wg2 %*% u_init %*% truealpha + e2  # Phenotype
   
   # Return the simulated data as a list
   simulated_data <- list(
     wg1 = wg1,
     wg2 = wg2,
-    u_init = u
+    u_init = u_init,
     y = y,
-    z = z,
+    z = z
   )
   
   return(simulated_data)
