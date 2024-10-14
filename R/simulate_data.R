@@ -113,6 +113,7 @@ simulate_data <- function(n1, n2, m1, p1, k, sigma1, sigma2, sigmau, truealpha,
   simulated_data <- list(
     wg1 = wg1,
     wg2 = wg2,
+    u_init = u
     y = y,
     z = z,
   )
