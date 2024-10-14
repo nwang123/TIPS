@@ -25,17 +25,12 @@ library(TIPS)
 
 Data
 ===========
-We need the following inputs: 
-w1: genotype data for reference panel (e.g. GTEx)
-w2: genotype data for GWAS dataset 
-y: gene expression data for reference panel (e.g. GTEx)
-z: phenotype data for GWAS dataset
-Additionally, we need the pathway information (our current list pathway.RData includes ?? pathways from KEGG, Reactome and Biocarta) to group the genes 
+We need the following inputs: w1: genotype data for reference panel (e.g. GTEx); w2: genotype data for GWAS dataset; y: gene expression data for reference panel (e.g. GTEx); z: phenotype data for GWAS dataset. Additionally, we need the pathway information (e.g. pre-saved pathways from KEGG_MSigDB.RData, Reactome.RData and biocarta.RData under data folder) to group the genes.
 
 Implementation steps
 ===========
-1.	We first ran an Expectation-Maximization (EM) algorithm to iteratively estimate model parameters, including gene effects (`alpha`) and noise variances (`sigma1`, `sigma2`, `sigmau`).
-2.	We then ran k-fold cross-validation to tune regularization parameters (`lambda` and ‘a’) for the optimal choice.
+1.	We first ran an Expectation-Maximization (EM) algorithm to iteratively estimate model parameters, including gene effects (alpha) and noise variances (sigma1, sigma2, sigmau).
+2.	We then ran k-fold cross-validation to tune regularization parameters (lambda and ‘a’) for the optimal choice.
 3.	Lastly, we performed likelihood ratio tests for each pathway and each gene and outputted the p-values for their association with the phenotype.
 
 We provide one data example from the GTEx heart tissue and GWAS data for SBP from UK Biobank. Since the size of the original GWAS dataset is too large and there is limits to files size on Github, we split it to chunks and provide the first two chunks as example. If you are interested in the complete data file, please refer to wangneng7877@gmail.com.
@@ -45,7 +40,8 @@ data(y_gene_heart_chu1)
 data(w1_heart_chu1)
 data(z_heart)
 ```
-Since there are .zip file for w2_heart_chu1, the best way to import it is to download the .zip file and unzip it. Then you can import the data in R.
+w2_heart_chu1 is in.zip file, so the best way to import it is to download the .zip file and unzip it. Then you can import the data in R.
+For running a toy simulation example of our package, please run the data simulation example.R code under example folder. 
 
 Output 
 ===========
