@@ -24,7 +24,6 @@
 # - `n1`, `n2`: Sample sizes for two groups.
 # - `m1`: Number of genes to simulate.
 # - `p1`: Number of SNPs to simulate.
-# - `k`: SNP loadings, defining how many SNPs affect each gene.
 # - `sigma1`, `sigma2`, `sigmau`: Variances for the error terms in gene expression and genotype matrices.
 # - `truealpha`: True effect sizes used for simulating phenotypic data.
 # - `size`: Size of the dataset (`small`, `large`, `hcsmall`, `htsmall`).
