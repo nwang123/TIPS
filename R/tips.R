@@ -9,27 +9,21 @@
 ### **Model Estimation and Cross-validation**
 # The function supports k-fold cross-validation to tune regularization parameters (`lambda`) for different models, such as Lasso and Elastic Net. It calculates the mean squared error (MSE) to evaluate model performance.
 
-tips <- function(simulated_data) {
+# - `k`: SNP loadings, defining how many SNPs affect each gene.
+tips <- function(simulated_data, k, sigma1_init = 0.1, sigma2_init = 0.1, sigmau_init = 0.1, truealpha_init) {
   
   # Extract variables from the simulated data
   wg1 <- simulated_data$wg1
   wg2 <- simulated_data$wg2
-  u <- simulated_data$u
-  e1 <- simulated_data$e1
-  e2 <- simulated_data$e2
+  u_init <- simulated_data$u_init
   y <- simulated_data$y
   z <- simulated_data$z
-  n1 <- simulated_data$n1
-  n2 <- simulated_data$n2
-  m1 <- simulated_data$m1
-  p1 <- simulated_data$p1
-  k <- simulated_data$k
-  sigma1 <- simulated_data$sigma1
-  sigma2 <- simulated_data$sigma2
-  sigmau <- simulated_data$sigmau
-  truealpha <- simulated_data$truealpha
-  size <- simulated_data$size
-  wg_str <- simulated_data$wg_str
+  
+  # Derive dimensions from the data
+  n1 <- dim(wg1)[1]  # Number of samples in wg1
+  n2 <- dim(wg2)[1]  # Number of samples in wg2
+  m1 <- dim(y)[2]    # Number of genes
+  p1 <- dim(u_init)[1]  # Number of SNPs
   
   # Load required libraries
   library(foreach)
